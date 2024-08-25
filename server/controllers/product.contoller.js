@@ -1,4 +1,13 @@
+const sendResponse = require("../common");
 const { Products, Categories } = require("../models/associations");
+const { StatusCodes } = require("http-status-codes");
+
+const getPagination = (page, size) => {
+  const limit = size ? +size : 3;
+  const offset = page ? page * limit : 0;
+
+  return { limit, offset };
+};
 
 class ProductController {
   add(req, res, next) {
@@ -7,18 +16,44 @@ class ProductController {
       .catch(next);
   }
   getAll(req, res, next) {
-    Products.findAll({
+    const { page, size, name, categoryId } = req.query;
+
+    const { limit, offset } = getPagination(page, size);
+
+    Products.findAndCountAll({
+      where: {
+        ...(name && { name }),
+      },
       include: [
         {
           model: Categories,
+          where: {
+            ...(categoryId && { id: categoryId }),
+          },
           as: "category",
           required: true,
         },
       ],
+      limit,
+      offset,
       schema: "product_schema",
     })
-      .then((result) => res.json(result))
-      .catch(next);
+      .then((response) => {
+        sendResponse(
+          res,
+          StatusCodes.OK,
+          "product fetched successfully",
+          response
+        );
+      })
+      .catch(() => {
+        sendResponse(
+          res,
+          StatusCodes.BAD_REQUEST,
+          "falied to fetched products",
+          next
+        );
+      });
   }
   get(req, res, next) {
     const id = req.params.productId;

@@ -8,7 +8,7 @@ const config = {
     dialect: process.env.DB_DIALECT || "mysql",
   },
   app: {
-    port: process.env.port || "8080",
+    port: process.env.port || "8000",
     clientHost: process.env.CLIENT_HOST || "http://localhost:3000",
   },
 };
