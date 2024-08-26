@@ -7,8 +7,6 @@ const categories = require("./routes/categories");
 const AppConfig = require("./config").app;
 const path = require("path");
 
-let __basedir = path.resolve(path.dirname(""));
-
 const app = express();
 
 app.use(

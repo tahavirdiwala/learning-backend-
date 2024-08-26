@@ -12,7 +12,7 @@ module.exports = (sequelize, type) => {
         allowNull: false,
       },
       image: {
-        type: type.BLOB("long"),
+        type: type.STRING(800),
       },
     },
     {
