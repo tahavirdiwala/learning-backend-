@@ -1,4 +1,4 @@
-import API from "../plugin";
+import API from "../plugins";
 
 class ProductService {
   getAll(payload = {}) {
