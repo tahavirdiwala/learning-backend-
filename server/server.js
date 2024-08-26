@@ -2,7 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const sequelize = require("./db/sequelize");
-const router = require("./routes/products");
+const product = require("./routes/products");
+const categories = require("./routes/categories");
 const AppConfig = require("./config").app;
 
 const app = express();
@@ -16,7 +17,8 @@ app.use(
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use("/api", router);
+app.use("/api", product);
+app.use("/api", categories);
 
 const PORT = process.env.PORT || 8000;
 

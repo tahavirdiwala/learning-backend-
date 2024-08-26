@@ -10,15 +10,9 @@ module.exports = (sequelize, type) => {
       name: {
         type: type.STRING(50),
         allowNull: false,
-        validate: {
-          len: {
-            args: [3, 150],
-            msg: "Name length should be between 3 and 150 characters",
-          },
-        },
       },
       image: {
-        type: type.STRING(500),
+        type: type.BLOB("long"),
       },
     },
     {
