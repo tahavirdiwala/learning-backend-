@@ -3,14 +3,15 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const sequelize = require("./db/sequelize");
 const router = require("./routes/products");
+const AppConfig = require("./config").app;
 
 const app = express();
 
-const corsOptions = {
-  origin: "http://localhost:8000/",
-};
-
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: AppConfig.clientHost,
+  })
+);
 
 app.use(bodyParser.json());
 app.use(express.json());

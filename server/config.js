@@ -9,7 +9,7 @@ const config = {
   },
   app: {
     port: process.env.port || "8000",
-    clientHost: process.env.CLIENT_HOST || "http://localhost:3000",
+    clientHost: process.env.CLIENT_HOST || "http://localhost:5173",
   },
 };
 
