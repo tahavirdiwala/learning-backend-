@@ -7,6 +7,7 @@ router.get("/", homeController.getHome);
 
 router
   .route("/categories")
-  .post(upload.single("image"), CategoriesController.add);
+  .post(upload.single("image"), CategoriesController.add)
+  .get(CategoriesController.getAll);
 
 module.exports = router;

@@ -32,7 +32,20 @@ class CategoriesController {
         )
       );
   }
-  getAll() {}
+  getAll(req, res) {
+    Categories.findAndCountAll()
+      .then((response) => {
+        sendResponse(
+          res,
+          StatusCodes.OK,
+          "Category fetched successfully",
+          response
+        );
+      })
+      .catch((err) => {
+        sendResponse(res, StatusCodes.BAD_REQUEST, `${err}`);
+      });
+  }
 }
 
 module.exports = new CategoriesController();
