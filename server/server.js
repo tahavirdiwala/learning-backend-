@@ -5,6 +5,9 @@ const sequelize = require("./db/sequelize");
 const product = require("./routes/products");
 const categories = require("./routes/categories");
 const AppConfig = require("./config").app;
+const path = require("path");
+
+let __basedir = path.resolve(path.dirname(""));
 
 const app = express();
 
@@ -19,6 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/api", product);
 app.use("/api", categories);
+app.use("/assets", express.static(path.join(__dirname, "assets")));
 
 const PORT = process.env.PORT || 8000;
 

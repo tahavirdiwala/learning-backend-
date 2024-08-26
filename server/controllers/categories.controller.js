@@ -18,10 +18,15 @@ class CategoriesController {
 
         const copy = {
           name: category.name,
-          image: "/assets/" + Date.now() + category.name,
+          image: `/assets/${category.name}`,
         };
 
-        sendResponse(res, StatusCodes.OK, "Category added successfully", copy);
+        sendResponse(
+          res,
+          StatusCodes.CREATED,
+          "Category added successfully",
+          copy
+        );
       })
       .catch(() =>
         sendResponse(
