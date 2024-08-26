@@ -12,8 +12,10 @@ const getPagination = (page, size) => {
 class ProductController {
   add(req, res, next) {
     Products.create(req.body)
-      .then((result) => res.json(result))
-      .catch(next);
+      .then((result) =>
+        sendResponse(res, StatusCodes.OK, "Product added successfully", result)
+      )
+      .catch(() => sendResponse(res, StatusCodes.BAD_REQUEST, `${next}`));
   }
   getAll(req, res, next) {
     const { page, size, name, categoryId } = req.query;
@@ -42,7 +44,7 @@ class ProductController {
         sendResponse(
           res,
           StatusCodes.OK,
-          "product fetched successfully",
+          "products fetched successfully",
           response
         );
       })
@@ -59,7 +61,12 @@ class ProductController {
     const id = req.params.productId;
     Products.findByPk(id)
       .then((product) => {
-        res.json(product);
+        sendResponse(
+          res,
+          StatusCodes.OK,
+          "product fetched successfully",
+          product
+        );
       })
       .catch(next);
   }
