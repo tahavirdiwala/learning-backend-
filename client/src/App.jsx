@@ -7,15 +7,34 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  InputLabel,
   MenuItem,
   Select,
   TextField,
 } from "@mui/material";
+import categoryService from "./services/category.service";
 
 function App() {
   const [rows, setRows] = useState(null);
   const [open, setOpen] = useState(false);
+  const [categories, setCategories] = useState(null);
+
   const columns = [
+    {
+      field: "avatar",
+      headerName: "Avatar",
+      width: 90,
+      renderCell: ({ row: { category } }) => {
+        return (
+          <img
+            width={"50"}
+            height={"50"}
+            style={{ borderRadius: "50%" }}
+            src={`http://localhost:8000/assets/${category?.image}`}
+          />
+        );
+      },
+    },
     { field: "id", headerName: "ID", width: 90 },
     {
       field: "name",
@@ -56,13 +75,22 @@ function App() {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const resopnse = await categoryService.getAll();
+      setCategories(resopnse.data?.data);
+    } catch (err) {
+      console.log("..err=>>>>>>>>", err);
+    }
+  };
+
   const addProduct = async (data) => {
-    const resopnse = await productService.add(data);
-    console.log("resopnse", resopnse);
+    await productService.add(data);
   };
 
   useEffect(() => {
     fetchData();
+    fetchCategories();
   }, []);
 
   const handleClickOpen = () => {
@@ -80,12 +108,11 @@ function App() {
         onClose={handleClose}
         PaperProps={{
           component: "form",
-          onSubmit: (event) => {
+          onSubmit: async (event) => {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
-            addProduct(formJson);
-            handleClose();
+            await addProduct(formJson);
           },
         }}
       >
@@ -112,16 +139,22 @@ function App() {
             fullWidth
             variant="standard"
           />
+          <InputLabel id="demo-simple-select-label">Categories</InputLabel>
+
           <Select
+            id="categoryId"
+            name="categoryId"
+            style={{ height: "50px" }}
             fullWidth
-            placeholder="Select Category"
-            // value={age}
             label="Category"
-            // onChange={handleChange}
           >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            {categories?.rows?.map((item) => {
+              return (
+                <MenuItem key={item?.id} value={item?.id}>
+                  {item?.name}
+                </MenuItem>
+              );
+            })}
           </Select>
           <TextField
             autoFocus
