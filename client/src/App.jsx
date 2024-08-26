@@ -56,10 +56,14 @@ function App() {
     }
   };
 
+  const addProduct = async (data) => {
+    const resopnse = await productService.add(data);
+    console.log("resopnse", resopnse);
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
-  console.log("rows?.count", rows?.count);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -80,8 +84,7 @@ function App() {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
-            const email = formJson.email;
-            console.log(email);
+            addProduct(formJson);
             handleClose();
           },
         }}

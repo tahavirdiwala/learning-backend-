@@ -5,8 +5,11 @@ class ProductService {
     return API.get(
       `products/?name=${payload.name || ""}&category=${
         payload.category || ""
-      }&page=${payload.page || 1}&size=${payload?.size || 5}`
+      }&page=${payload.page || 0}&size=${payload?.size || 5}`
     );
+  }
+  add(payload) {
+    return API.post("/products", payload);
   }
 }
 
