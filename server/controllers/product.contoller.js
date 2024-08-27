@@ -21,7 +21,12 @@ class ProductController {
   add(req, res, next) {
     Products.create(req.body)
       .then((result) =>
-        sendResponse(res, StatusCodes.OK, "Product added successfully", result)
+        sendResponse(
+          res,
+          StatusCodes.CREATED,
+          "Product added successfully",
+          result
+        )
       )
       .catch(() => sendResponse(res, StatusCodes.BAD_REQUEST, `${next}`));
   }
@@ -67,7 +72,7 @@ class ProductController {
         );
       });
   }
-  get(req, res, next) {
+  get(req, res) {
     const id = req.params.productId;
     Products.findByPk(id)
       .then((product) => {
@@ -78,7 +83,30 @@ class ProductController {
           product
         );
       })
-      .catch(next);
+      .catch((err) => sendResponse(res, StatusCodes.OK, `${err}`));
+  }
+  edit(req, res) {
+    const id = req.params.productId;
+    const newProduct = req.body;
+
+    Products.findByPk(id).then((product) => {
+      if (product) {
+        Products.update(newProduct, { where: { id } }).then(() => {
+          sendResponse(
+            res,
+            StatusCodes.OK,
+            "Product Updated Successfully",
+            newProduct
+          );
+        });
+      } else {
+        sendResponse(
+          res,
+          StatusCodes.BAD_REQUEST,
+          "Failed to Updated product Successfully"
+        );
+      }
+    });
   }
 }
 
