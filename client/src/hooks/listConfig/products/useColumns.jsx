@@ -1,3 +1,5 @@
+import { ActionRow } from "./useAction";
+
 export const useColumns = () => {
   const columns = [
     {
@@ -42,6 +44,15 @@ export const useColumns = () => {
       editable: true,
       valueGetter: (_, row) => {
         return row?.category?.name;
+      },
+    },
+    {
+      field: "Action",
+      headerName: "Action",
+      width: 150,
+      editable: true,
+      renderCell: ({ row }) => {
+        return <ActionRow />;
       },
     },
   ];

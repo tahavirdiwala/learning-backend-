@@ -24,7 +24,7 @@ function App() {
       <div
         style={{
           border: "1px solid black",
-          width: "900px",
+          width: "1000px",
           padding: "8px",
         }}
       >
