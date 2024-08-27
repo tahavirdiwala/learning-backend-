@@ -11,13 +11,18 @@ function App() {
 
   const handleOpen = () => {
     setOpen(true);
+    setId(0)
+  };
+
+  const handleEditOpen = () => {
+    setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const columns = useColumns(handleOpen, setId);
+  const columns = useColumns(handleEditOpen, setId);
   const { data } = useList();
 
   return (

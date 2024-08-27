@@ -7,6 +7,6 @@ export const useList = (props) => {
     queryFn: async () => {
       return await categoryService.getAll();
     },
-    enabled: props.enabled,
+    enabled: Boolean(props.enabled),
   });
 };
