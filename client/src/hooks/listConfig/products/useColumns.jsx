@@ -1,6 +1,6 @@
 import { ActionRow } from "./useAction";
 
-export const useColumns = () => {
+export const useColumns = (handleOpen, setId) => {
   const columns = [
     {
       field: "avatar",
@@ -52,7 +52,7 @@ export const useColumns = () => {
       width: 150,
       editable: true,
       renderCell: ({ row }) => {
-        return <ActionRow />;
+        return <ActionRow setId={setId} row={row} handleOpen={handleOpen} />;
       },
     },
   ];

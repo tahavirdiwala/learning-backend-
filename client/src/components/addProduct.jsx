@@ -1,32 +1,47 @@
+/* eslint-disable react/prop-types */
 import { Dialog, DialogActions, DialogContent } from "@mui/material";
 import { TextField } from "../common/textInput";
 import { SelectBox } from "../common/selectBox";
 import { Button } from "../common/button";
 import { useList } from "../hooks/listConfig/categories/index";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import productService from "../services/product.service";
 
 export const AddProduct = (props) => {
   const queryClient = useQueryClient();
-  // eslint-disable-next-line react/prop-types
   const { data } = useList({ enabled: props.open });
 
-  const addProductMutation = useMutation({
+  const getProduct = useQuery({
+    queryKey: ["getProduct", props.id],
+    queryFn: async () => {
+      return await productService.get(props.id);
+    },
+    enabled: Boolean(props.id),
+  });
+
+  const productMutation = useMutation({
     mutationFn: async (data) => {
-      return await productService.add(data);
+      if (props.id) {
+        const payload = {
+          id: props?.id,
+          ...data,
+        };
+        return await productService.edit(payload);
+      } else {
+        return await productService.add(data);
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["products"]);
-      // eslint-disable-next-line react/prop-types
       props.handleClose();
     },
   });
 
+  const defaultFormData = getProduct?.data?.data?.data;
+
   return (
     <Dialog
-      // eslint-disable-next-line react/prop-types
       open={props.open}
-      // eslint-disable-next-line react/prop-types
       onClose={props.handleClose}
       PaperProps={{
         component: "form",
@@ -34,65 +49,44 @@ export const AddProduct = (props) => {
           event.preventDefault();
           const formData = new FormData(event.currentTarget);
           const formJson = Object.fromEntries(formData.entries());
-          addProductMutation.mutate(formJson);
+          productMutation.mutate(formJson);
         },
       }}
     >
       <DialogContent>
-        <TextField
-          autoFocus
-          required
-          margin="dense"
-          id="name"
-          name="name"
-          label="Name"
-          type="text"
-          fullWidth
-          variant="standard"
-        />
-        <TextField
-          autoFocus
-          required
-          margin="dense"
-          id="price"
-          name="price"
-          label="Price"
-          type="number"
-          fullWidth
-          variant="standard"
-        />
-        <SelectBox
-          id="categoryId"
-          name="categoryId"
-          style={{ height: "50px" }}
-          fullWidth
-          label="Categories"
-          menuItems={data?.data?.data?.rows}
-        />
-        <TextField
-          autoFocus
-          required
-          margin="dense"
-          id="date"
-          name="expiry_date"
-          type="date"
-          fullWidth
-          variant="standard"
-        />
-        <TextField
-          autoFocus
-          required
-          margin="dense"
-          id="description"
-          name="description"
-          label="Description"
-          type="text"
-          fullWidth
-          variant="standard"
-        />
+        {getProduct.isLoading
+          ? "...loading"
+          : Object.entries({
+              name: { label: "Name", type: "text" },
+              price: { label: "Price", type: "number" },
+              categoryId: {
+                label: "Categories",
+                component: SelectBox,
+                menuItems: data?.data?.data?.rows,
+              },
+              expiry_date: { type: "date" },
+              description: { label: "Description", type: "text" },
+            }).map(
+              ([
+                key,
+                { label, type, component: Component = TextField, ...rest },
+              ]) => (
+                <Component
+                  key={key}
+                  id={key}
+                  name={key}
+                  label={label}
+                  type={type}
+                  fullWidth
+                  margin="dense"
+                  variant="standard"
+                  defaultValue={defaultFormData?.[key] || ""}
+                  {...rest}
+                />
+              )
+            )}
       </DialogContent>
       <DialogActions>
-        {/* eslint-disable-next-line react/prop-types */}
         <Button onClick={props.handleClose}>Cancel</Button>
         <Button type="submit">Submit</Button>
       </DialogActions>

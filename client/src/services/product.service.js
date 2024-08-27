@@ -11,6 +11,12 @@ class ProductService {
   add(payload) {
     return API.post("/products", payload);
   }
+  get(id) {
+    return API.get(`/products/${id}`);
+  }
+  edit(payload) {
+    return API.put(`/products/${payload.id}`, payload);
+  }
 }
 
 export default new ProductService();

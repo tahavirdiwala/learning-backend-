@@ -7,10 +7,9 @@ import { AddProduct } from "./components/addProduct";
 
 function App() {
   const [open, setOpen] = useState(false);
-  const columns = useColumns();
-  const { data } = useList();
+  const [id, setId] = useState();
 
-  const handleClickOpen = () => {
+  const handleOpen = () => {
     setOpen(true);
   };
 
@@ -18,9 +17,17 @@ function App() {
     setOpen(false);
   };
 
+  const columns = useColumns(handleOpen, setId);
+  const { data } = useList();
+
   return (
     <>
-      <AddProduct open={open} handleClose={handleClose} />
+      <AddProduct
+        id={id}
+        open={open}
+        handleOpen={handleOpen}
+        handleClose={handleClose}
+      />
       <div
         style={{
           border: "1px solid black",
@@ -31,7 +38,7 @@ function App() {
         <Button
           style={{ display: "flex" }}
           variant="outlined"
-          onClick={handleClickOpen}
+          onClick={handleOpen}
         >
           add product
         </Button>
