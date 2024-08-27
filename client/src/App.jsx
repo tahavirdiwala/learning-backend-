@@ -1,70 +1,25 @@
 import "./App.css";
-import { DataGrid } from "@mui/x-data-grid";
 import productService from "./services/product.service";
 import { useEffect, useState } from "react";
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
   InputLabel,
-  MenuItem,
-  Select,
-  TextField,
 } from "@mui/material";
 import categoryService from "./services/category.service";
+import { Button } from "./common/button";
+import { TextField } from "./common/textInput";
+import { DataGrid } from "./common/dataGrid";
+import { SelectBox } from "./common/selectBox";
+import { useColumns } from "./hooks/listConfig/products";
 
 function App() {
   const [rows, setRows] = useState(null);
   const [open, setOpen] = useState(false);
   const [categories, setCategories] = useState(null);
 
-  const columns = [
-    {
-      field: "avatar",
-      headerName: "Avatar",
-      width: 90,
-      renderCell: ({ row: { category } }) => {
-        return (
-          <img
-            width={"50"}
-            height={"50"}
-            style={{ borderRadius: "50%" }}
-            src={`http://localhost:8000/assets/${category?.image}`}
-          />
-        );
-      },
-    },
-    { field: "id", headerName: "ID", width: 90 },
-    {
-      field: "name",
-      headerName: "Name",
-      width: 150,
-      editable: true,
-    },
-    {
-      field: "description",
-      headerName: "Description",
-      width: 150,
-      editable: true,
-    },
-    {
-      field: "price",
-      headerName: "Price",
-      type: "number",
-      width: 110,
-      editable: true,
-    },
-    {
-      field: "category",
-      headerName: "Category",
-      width: 150,
-      editable: true,
-      valueGetter: (_, row) => {
-        return row?.category?.name;
-      },
-    },
-  ];
+  const columns = useColumns();
 
   const fetchData = async () => {
     try {
@@ -90,11 +45,11 @@ function App() {
 
   useEffect(() => {
     fetchData();
-    fetchCategories();
   }, []);
 
   const handleClickOpen = () => {
     setOpen(true);
+    fetchCategories();
   };
 
   const handleClose = () => {
@@ -140,22 +95,14 @@ function App() {
             variant="standard"
           />
           <InputLabel id="demo-simple-select-label">Categories</InputLabel>
-
-          <Select
+          <SelectBox
             id="categoryId"
             name="categoryId"
             style={{ height: "50px" }}
             fullWidth
             label="Category"
-          >
-            {categories?.rows?.map((item) => {
-              return (
-                <MenuItem key={item?.id} value={item?.id}>
-                  {item?.name}
-                </MenuItem>
-              );
-            })}
-          </Select>
+            menuItems={categories?.rows}
+          />
           <TextField
             autoFocus
             required

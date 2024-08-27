@@ -6,7 +6,7 @@ class CategoriesController {
   add(req, res, next) {
     Categories.create({
       name: req.body.name,
-      image: req.file.filename,
+      image: req?.file?.filename,
     })
       .then((category) => {
         sendResponse(
