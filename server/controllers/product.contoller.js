@@ -108,6 +108,16 @@ class ProductController {
       }
     });
   }
+  delete(req, res) {
+    const id = req.params.productId;
+    Products.destroy({ where: { id } })
+      .then((product) => {
+        sendResponse(res, StatusCodes.OK, "Product Deleted Successfully");
+      })
+      .catch((err) => {
+        sendResponse(res, StatusCodes.BAD_REQUEST, `${err}`);
+      });
+  }
 }
 
 module.exports = new ProductController();
