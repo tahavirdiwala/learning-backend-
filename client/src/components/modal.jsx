@@ -31,6 +31,7 @@ export const Modal = (props) => {
                 label: "Categories",
                 component: SelectBox,
                 menuItems: categories?.data?.data?.rows,
+                required: true,
               },
               expiry_date: { type: "date" },
               description: { label: "Description", type: "text" },
